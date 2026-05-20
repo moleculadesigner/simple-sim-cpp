@@ -1,8 +1,8 @@
-#ifndef TWO_BODY_GRAVITY
-#define TWO_BODY_GRAVITY
+#ifndef BODY
+#define BODY
 #include <array>
 
-namespace gravity {
+namespace sim {
 static double G = 6.675542e-11;
 class Body{
     private:
@@ -25,4 +25,4 @@ class Body{
 double gravity_force(Body &b1, Body &b2);
 } // gravity      
 
-#endif // TWO_BODY_GRAVITY
+#endif // BODY

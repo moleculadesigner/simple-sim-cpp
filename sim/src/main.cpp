@@ -1,4 +1,4 @@
-#include "two-body-gravity.hpp"
+#include "Body.hpp"
 #include <cstdlib>
 #include <random>
 #include <iostream>

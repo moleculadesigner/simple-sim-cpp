@@ -1,8 +1,8 @@
-#include "two-body-gravity.hpp"
+#include "Body.hpp"
 #include <cmath>
 #include <array>
 
-namespace gravity {
+namespace sim {
 Body::Body(std::array<double, 3> &coords, double mass) {
     this->x = coords[0];
     this->y = coords[1];
