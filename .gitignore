@@ -21,3 +21,5 @@ Makefile
 # LSP stuff
 compile_commands.json
 .cache
+
+.DS_Store

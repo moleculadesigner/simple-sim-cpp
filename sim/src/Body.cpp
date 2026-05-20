@@ -1,35 +1,58 @@
 #include "Body.hpp"
-#include <cmath>
+//#include <cmath>
 #include <array>
+#include <stdexcept>
+#include <algorithm>
+#include <string>
 
 namespace sim {
-Body::Body(std::array<double, 3> &coords, double mass) {
-    this->x = coords[0];
-    this->y = coords[1];
-    this->z = coords[2];
-    this->m = mass;
+
+Body::Body(const Eigen::Vector3d& vec, double m) :
+    coord_{vec},
+    m_{m}
+    {
+        if (m_ <= 0) throw std::invalid_argument("Mass must be positive");
+    }
+
+Body::Body(double x, double y, double z, double m) :
+    Body(Eigen::Vector3d{x, y, z}, m) {}
+
+// Set
+void Body::m(double mass) {
+    if (mass <= 0) throw std::invalid_argument("Mass must be positive");
+    m_ = mass;
 }
 
-std::array<double, 3> Body::X() {
-    return std::array<double, 3>{
-        this->x,
-        this->y,
-        this->z
-    };
+// Measure
+double Body::sq_dist_to(const Body& other) const {
+    return (coord_ - other.coord_).squaredNorm();
 }
 
-double Body::M() {
-    return this->m;
-}
-    
-double Body::sq_dist_to(Body &other) {
-    return std::pow(this->x - other.x, 2)
-         + std::pow(this->y - other.y, 2)
-         + std::pow(this->z - other.z, 2);
+// Transform
+void Body::move(const Eigen::Vector3d& dx) {
+    coord_ += dx;
 }
 
-double gravity_force(Body &b1, Body &b2) {
-    return G * b1.M() * b2.M() / b1.sq_dist_to(b2);
+void Body::accelerate(const Eigen::Vector3d& dv) {
+    vel_ += dv;
 }
+
+void Body::reset_force() {
+    f_ = Eigen::Vector3d::Zero();
+}
+
+std::string Body::show_xyz() const {
+    std::string xyz_entry;
+    xyz_entry = "P " 
+        + std::to_string(coord_[0]) + " "
+        + std::to_string(coord_[1]) + " "
+        + std::to_string(coord_[2]) + " ";
+    return xyz_entry;
+}
+
+double gravity_force(Body &b1, Body &b2, double G) {
+    return G * b1.m() * b2.m() / std::max(eps, b1.sq_dist_to(b2));
+}
+
 
 } // namespace gravity

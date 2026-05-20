@@ -1,0 +1,84 @@
+#include "Integrator.hpp"
+#include "Body.hpp"
+#include "Eigen/src/Core/Matrix.h"
+#include <random>
+#include <Eigen/Dense>
+#include <iostream>
+
+namespace sim {
+System::System(size_t n_particles) {
+    particles_.reserve(n_particles);
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> pos_dis(-100.0, 100.0);
+    std::uniform_real_distribution<double> mass_dis(1.0, 10.0);
+
+    for (size_t i = 0; i < n_particles; ++i) {
+        particles_.emplace_back(
+            pos_dis(gen), pos_dis(gen), pos_dis(gen), // x, y, z
+            mass_dis(gen)                             // mass
+        );
+    }
+}
+
+System::System(const std::vector<Body>& particles) : particles_{particles} {};
+
+System::System(
+    const std::vector<Eigen::Vector3d>& points,
+    const std::vector<double>& masses
+) {
+    if (points.size() != masses.size()) {
+        throw std::invalid_argument(
+            "Number of points must be equal to number of masses."
+        );
+    }
+    particles_.reserve(points.size());
+    for (size_t i = 0; i < points.size(); ++i) {
+        particles_.emplace_back(
+            points[i],
+            masses[i]
+        );
+    }
+}
+
+void System::add_particle(const Body& particle) {
+    particles_.push_back(particle);
+}
+
+void System::calculate_forces() {
+    for (auto& p : particles_) p.reset_force();
+
+    for (size_t i = 0; i < n_particles(); ++i) {
+        Body& particle = particles_[i];
+        for (size_t j = i + 1; j < n_particles(); ++j) {
+            Body& other = particles_[j];
+            Eigen::Vector3d df = (other.X() - particle.X());
+            double f_val = gravity_force(particle, other, G_);
+            df *= f_val / df.norm();
+            particle.F(particle.F() + df);
+            other.F(other.F() - df);
+        }
+    }
+}
+
+void System::step(double dt) {
+    for (auto& p : particles_) {
+        p.move(p.V() * dt + p.a() * dt * dt * 0.5);
+        p.accelerate(0.5 * p.a() * dt); // половина скорости
+    }
+    calculate_forces();
+    for (auto& p : particles_) {
+        p.accelerate(0.5 * p.a() * dt); // вторая половина
+    }
+}
+
+void System::print_state_xyz() const {
+    std::cout << n_particles() << std::endl << std::endl;
+    for (auto p: particles_) {
+        std::cout << p.show_xyz() << std::endl;
+    }
+}
+
+
+} // namespace sim

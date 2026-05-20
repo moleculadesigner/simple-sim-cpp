@@ -21,13 +21,14 @@ set(BUILD_TESTING OFF CACHE BOOL "" FORCE) # Это отключит поиск 
 FetchContent_MakeAvailable(eigen)
 
 # что собирать
-add_executable(sim_app
-  sim/src/main.cpp
-  sim/src/two-body-gravity.cpp
+add_executable(sim
+  sim/main.cpp
+  sim/src/Body.cpp
+  sim/src/Integrator.cpp
 )
 
 # Связываем проект с Eigen
-target_link_libraries(sim_app PRIVATE Eigen3::Eigen)
+target_link_libraries(sim PRIVATE Eigen3::Eigen)
 
 # Указываем CMake (и редактору), где лежат хедеры
-target_include_directories(sim_app PRIVATE sim/include)
+target_include_directories(sim PRIVATE sim/include)
