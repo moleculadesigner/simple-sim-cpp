@@ -1,5 +1,5 @@
 # build artifacts
-build/
+build*/
 bin/
 lib/
 *.o
@@ -22,4 +22,5 @@ Makefile
 compile_commands.json
 .cache
 
+# MacOS stuff
 .DS_Store
