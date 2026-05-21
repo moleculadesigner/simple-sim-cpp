@@ -7,15 +7,18 @@
 #include "Body.hpp"
 #include <vector>
 #include <Eigen/Dense>
+#include <ostream>
 
 
 namespace sim {
 static double G = 6.675542e-11;
+static double SigmaScale = 1e-10;
 
 class System {
 private:
     std::vector<Body> particles_;
     double G_ = G;
+    double ljs_ = SigmaScale;
 
 public:
     System(size_t n_particles); // random init
@@ -32,7 +35,7 @@ public:
 public:
     void calculate_forces();
     void step(double dt);
-    void print_state_xyz() const;
+    void print_state_xyz(std::ostream& os, const std::string& comment) const;
     
 }; // System
 } // namespace sim

@@ -49,7 +49,7 @@ class Body{
 
 }; // Body
 
-double gravity_force(Body& b1, Body& b2, double G);
+Eigen::Vector3d gravity_force(const Body& b1, const Body& b2, double G, double lj_sigma_scale);
 } // gravity      
 
 #endif // BODY

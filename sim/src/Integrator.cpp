@@ -4,6 +4,7 @@
 #include <random>
 #include <Eigen/Dense>
 #include <iostream>
+#include <ostream>
 
 namespace sim {
 System::System(size_t n_particles) {
@@ -53,9 +54,10 @@ void System::calculate_forces() {
         Body& particle = particles_[i];
         for (size_t j = i + 1; j < n_particles(); ++j) {
             Body& other = particles_[j];
-            Eigen::Vector3d df = (other.X() - particle.X());
-            double f_val = gravity_force(particle, other, G_);
-            df *= f_val / df.norm();
+            Eigen::Vector3d df = gravity_force(
+                particle, other,
+                G_, ljs_
+            );
             particle.F(particle.F() + df);
             other.F(other.F() - df);
         }
@@ -73,10 +75,11 @@ void System::step(double dt) {
     }
 }
 
-void System::print_state_xyz() const {
-    std::cout << n_particles() << std::endl << std::endl;
+void System::print_state_xyz(std::ostream& os, const std::string& comment) const {
+    os << n_particles() << "\n"
+       << comment << "\n";
     for (auto p: particles_) {
-        std::cout << p.show_xyz() << std::endl;
+        os << p.show_xyz() << "\n";
     }
 }
 
