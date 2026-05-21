@@ -46,6 +46,44 @@ System::System(
 void System::add_particle(const Body& particle) {
     particles_.push_back(particle);
 }
+Body& System::particle(size_t n) {
+    if (n >= particles_.size()) {
+        throw std::invalid_argument("Particle index is out of range");
+    }
+    return particles_[n];
+}
+const Body& System::particle(size_t n) const {
+    if (n >= particles_.size()) {
+        throw std::invalid_argument("Particle index is out of range");
+    }
+    return particles_[n];
+}
+
+double System::T() const {
+    double energy = 0.0;
+    for (auto p: particles_) {
+        energy += 0.5 * p.m() * p.V().squaredNorm();
+    }
+    return energy;
+}
+
+double System::U() const {
+    double energy = 0.0;
+    //for (auto& p : particles_) p.reset_force();
+    for (size_t i = 0; i < n_particles(); ++i) {
+        const Body& particle = particles_[i];
+        for (size_t j = i + 1; j < n_particles(); ++j) {
+            const Body& other = particles_[j];
+            float f = gravity_force(
+                particle, other,
+                G_, ljs_
+            ).norm();
+            float r = (other.X() - particle.X()).norm();
+            energy -= r * f;
+        }
+    }
+    return energy;
+}
 
 void System::calculate_forces() {
     for (auto& p : particles_) p.reset_force();
@@ -82,6 +120,26 @@ void System::print_state_xyz(std::ostream& os, const std::string& comment) const
         os << p.show_xyz() << "\n";
     }
 }
+
+Eigen::Vector3d System::com() const {
+    Eigen::Vector3d com = Eigen::Vector3d::Zero();
+    float total_mass = 0.0;
+    for (auto p: particles_) {
+        total_mass += p.m();
+    }
+    for (auto p: particles_) {
+        com += p.m() * p.X();
+    }
+    return com / total_mass;
+}
+
+void System::recenter() {
+    auto com = this->com();
+    for (auto p: particles_) {
+        p.X(p.X() - com);
+    }
+}
+
 
 
 } // namespace sim

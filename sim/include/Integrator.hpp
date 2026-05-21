@@ -29,13 +29,23 @@ public:
     ); // from coords + masses
     
     void add_particle(const Body& particle);
+    Body& particle(size_t n);
+    const Body& particle(size_t n) const;
     size_t n_particles() const {return particles_.size();}
+
+// Energy
+public:
+    double T() const;
+    double U() const;
+    Eigen::Vector3d p() const;
     
 // Movement
 public:
     void calculate_forces();
     void step(double dt);
     void print_state_xyz(std::ostream& os, const std::string& comment) const;
+    Eigen::Vector3d com() const;
+    void recenter();
     
 }; // System
 } // namespace sim
