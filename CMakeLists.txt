@@ -20,6 +20,14 @@ set(EIGEN_BUILD_DOC OFF CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE) # Это отключит поиск Boost в Eigen
 FetchContent_MakeAvailable(eigen)
 
+include(FetchContent)
+FetchContent_Declare(
+  argparse
+  GIT_REPOSITORY https://github.com/p-ranav/argparse.git
+  GIT_TAG v3.0
+)
+FetchContent_MakeAvailable(argparse)
+
 # что собирать
 add_executable(sim
   sim/main.cpp
@@ -27,8 +35,11 @@ add_executable(sim
   sim/src/Integrator.cpp
 )
 
-# Связываем проект с Eigen
-target_link_libraries(sim PRIVATE Eigen3::Eigen)
+# Связываем проект с библиотеками
+target_link_libraries(sim PRIVATE
+  Eigen3::Eigen
+  argparse
+)
 
 # Указываем CMake (и редактору), где лежат хедеры
 target_include_directories(sim PRIVATE sim/include)
