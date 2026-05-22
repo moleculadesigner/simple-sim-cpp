@@ -17,7 +17,7 @@ FetchContent_Declare(
 
 set(EIGEN_BUILD_PKGCONFIG OFF CACHE BOOL "" FORCE)
 set(EIGEN_BUILD_DOC OFF CACHE BOOL "" FORCE)
-set(BUILD_TESTING OFF CACHE BOOL "" FORCE) # Это отключит поиск Boost в Eigen
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(eigen)
 
 FetchContent_Declare(
@@ -40,7 +40,7 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG v1.17.0
 )
-# Для GTest лучше отключить установку в систему
+#Для GTest лучше отключить установку в систему
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
@@ -72,4 +72,9 @@ target_link_libraries(sim PRIVATE
 enable_testing()
 add_executable(test_physics tests/test_physics.cpp)
 target_include_directories(test_physics PRIVATE sim/include)
-target_link_libraries(test_physics PRIVATE simlib GTest::gtest_main nlohmann_json::nlohmann_json)
+target_link_libraries(test_physics
+  PRIVATE
+  simlib
+  GTest::gtest_main
+  nlohmann_json::nlohmann_json
+)

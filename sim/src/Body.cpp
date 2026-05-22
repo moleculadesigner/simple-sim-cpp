@@ -1,9 +1,6 @@
 #include "Body.hpp"
 #include <cmath>
-#include <array>
 #include <stdexcept>
-#include <algorithm>
-#include <string>
 
 namespace sim {
 

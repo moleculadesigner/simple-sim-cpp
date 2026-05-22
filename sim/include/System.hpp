@@ -7,7 +7,6 @@
 #include "Body.hpp"
 #include <vector>
 #include <Eigen/Dense>
-#include <ostream>
 
 
 namespace sim {

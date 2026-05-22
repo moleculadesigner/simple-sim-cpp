@@ -1,10 +1,7 @@
 #include "System.hpp"
 #include "Body.hpp"
-#include "Eigen/src/Core/Matrix.h"
 #include <random>
 #include <Eigen/Dense>
-#include <iostream>
-#include <ostream>
 
 namespace sim {
 System::System(size_t n_particles) {
@@ -69,7 +66,6 @@ double System::T() const {
 
 double System::U() const {
     double energy = 0.0;
-    //for (auto& p : particles_) p.reset_force();
     for (size_t i = 0; i < n_particles(); ++i) {
         const Body& particle = particles_[i];
         for (size_t j = i + 1; j < n_particles(); ++j) {
