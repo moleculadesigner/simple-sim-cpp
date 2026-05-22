@@ -41,15 +41,6 @@ void Body::reset_force() {
     f_ = Eigen::Vector3d::Zero();
 }
 
-std::string Body::show_xyz() const {
-    std::string xyz_entry;
-    xyz_entry = "P " 
-        + std::to_string(coord_[0]) + " "
-        + std::to_string(coord_[1]) + " "
-        + std::to_string(coord_[2]) + " ";
-    return xyz_entry;
-}
-
 Eigen::Vector3d gravity_force(
     const Body &b1,
     const Body &b2,

@@ -27,6 +27,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(argparse)
 
+FetchContent_Declare(
+  json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
 # Google Test
 FetchContent_Declare(
   googletest
@@ -42,10 +49,11 @@ FetchContent_MakeAvailable(googletest)
 # Теперь Body.cpp и Integrator.cpp живут здесь
 add_library(simlib STATIC
   sim/src/Body.cpp
-  sim/src/Integrator.cpp
+  sim/src/System.cpp
+  sim/src/SystemIO.cpp
 )
 target_include_directories(simlib PUBLIC sim/include)
-target_link_libraries(simlib PUBLIC Eigen3::Eigen)
+target_link_libraries(simlib PUBLIC Eigen3::Eigen nlohmann_json::nlohmann_json)
 
 # что собирать
 add_executable(sim
@@ -57,10 +65,11 @@ target_link_libraries(sim PRIVATE
   simlib
   Eigen3::Eigen
   argparse
+  nlohmann_json::nlohmann_json
 )
 
 # Тесты
 enable_testing()
 add_executable(test_physics tests/test_physics.cpp)
 target_include_directories(test_physics PRIVATE sim/include)
-target_link_libraries(test_physics PRIVATE simlib GTest::gtest_main)
+target_link_libraries(test_physics PRIVATE simlib GTest::gtest_main nlohmann_json::nlohmann_json)

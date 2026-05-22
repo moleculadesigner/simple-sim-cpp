@@ -7,18 +7,15 @@ namespace sim {
 static double eps = 1e-12;
 class Body{
     private:
-        Eigen::Vector3d coord_;
+        Eigen::Vector3d coord_ = Eigen::Vector3d::Zero();
         Eigen::Vector3d vel_ = Eigen::Vector3d::Zero();
         Eigen::Vector3d f_ = Eigen::Vector3d::Zero();
-        double m_;
+        double m_ = 1.0;
         
     
     public:
-        Body(const Eigen::Vector3d& vec, double m); /*:
-            coord_{vec},
-            vel_{Eigen::Vector3d::Zero()},
-            f_{Eigen::Vector3d::Zero()},
-            m_{m} {} */
+        Body() = default;
+        Body(const Eigen::Vector3d& vec, double m);
         
         // Access
         Body(double x, double y, double z, double m);
@@ -43,10 +40,6 @@ class Body{
         void move(const Eigen::Vector3d& dx);
         void accelerate(const Eigen::Vector3d& dv);
         void reset_force();
-        
-        // Show
-        std::string show_xyz() const;
-
 }; // Body
 
 Eigen::Vector3d gravity_force(const Body& b1, const Body& b2, double G, double lj_sigma_scale);
