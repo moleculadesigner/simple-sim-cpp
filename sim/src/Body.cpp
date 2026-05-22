@@ -1,4 +1,5 @@
 #include "Body.hpp"
+#include "Constants.hpp"
 #include <cmath>
 #include <stdexcept>
 
@@ -41,7 +42,7 @@ void Body::reset_force() {
 Eigen::Vector3d gravity_force(
     const Body &b1,
     const Body &b2,
-    double G,
+    double g,
     double lj_sigma_scale
 ) {
     // A gravity force with LJ-like correction to avoid particle overlapping
@@ -49,7 +50,7 @@ Eigen::Vector3d gravity_force(
     Eigen::Vector3d direction = b2.X() - b1.X();
     
     // пошло байтоебство для оптимизации
-    double r_2 = direction.squaredNorm() + eps;
+    double r_2 = direction.squaredNorm() + sim::EPSILON;
     double inv_r = 1.0 / std::sqrt(r_2);
     double inv_r_2 = inv_r * inv_r;
     double inv_r_4 = inv_r_2 * inv_r_2;
@@ -59,7 +60,7 @@ Eigen::Vector3d gravity_force(
     double sigma = lj_sigma_scale * std::pow(b1.m() + b2.m(), 1.0 / 3.0);
     
     Eigen::Vector3d f = direction * (
-        G * b1.m() * b2.m() * inv_r * inv_r_2 // Gravity
+        g * b1.m() * b2.m() * inv_r * inv_r_2 // Gravity
         - sigma * inv_r * inv_r_12
     );
     return f;

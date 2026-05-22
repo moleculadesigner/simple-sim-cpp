@@ -70,11 +70,11 @@ double System::U() const {
         const Body& particle = particles_[i];
         for (size_t j = i + 1; j < n_particles(); ++j) {
             const Body& other = particles_[j];
-            float f = gravity_force(
+            double f = gravity_force(
                 particle, other,
                 g_, ljs_
             ).norm();
-            float r = (other.X() - particle.X()).norm();
+            double r = (other.X() - particle.X()).norm();
             energy -= r * f;
         }
     }

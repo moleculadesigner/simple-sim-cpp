@@ -5,19 +5,18 @@
 
 
 #include "Body.hpp"
+#include "Constants.hpp"
 #include <vector>
 #include <Eigen/Dense>
 
 
 namespace sim {
-static double G = 6.675542e-11;
-static double SigmaScale = 1e-10;
 
 class System {
 private:
     std::vector<Body> particles_;
-    double g_ = G;
-    double ljs_ = SigmaScale;
+    double g_ = sim::GRAVITY_CONSTANT;
+    double ljs_ = sim::LJ_SCALE_DEFAULT;
 
 public:
     System() = default;

@@ -4,7 +4,6 @@
 #include <Eigen/Dense>
 
 namespace sim {
-static double eps = 1e-12;
 class Body{
     private:
         Eigen::Vector3d coord_ = Eigen::Vector3d::Zero();
@@ -43,6 +42,6 @@ class Body{
 }; // Body
 
 Eigen::Vector3d gravity_force(const Body& b1, const Body& b2, double G, double lj_sigma_scale);
-} // gravity      
+} // sim      
 
 #endif // BODY

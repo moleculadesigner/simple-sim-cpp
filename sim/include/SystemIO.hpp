@@ -24,6 +24,6 @@ void to_json(nlohmann::json& j, const System& s);
 
 System read_json_file(const std::filesystem::path& path);
 void write_state_xyz(const System& sys, std::ostream& os, const std::string& comment);
-} // namespace sim::io
+} // namespace sim
 
 #endif // SYSTEM_IO

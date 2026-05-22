@@ -81,6 +81,6 @@ void write_state_xyz(
         write_xyz_entry(p, os);
     }
 }
-} // namespace sim::io
+} // namespace sim
 
 #endif // SYSTEM_IO
