@@ -1,10 +1,7 @@
-#include "Integrator.hpp"
+#include "System.hpp"
 #include "Body.hpp"
-#include "Eigen/src/Core/Matrix.h"
 #include <random>
 #include <Eigen/Dense>
-#include <iostream>
-#include <ostream>
 
 namespace sim {
 System::System(size_t n_particles) {
@@ -69,14 +66,13 @@ double System::T() const {
 
 double System::U() const {
     double energy = 0.0;
-    //for (auto& p : particles_) p.reset_force();
     for (size_t i = 0; i < n_particles(); ++i) {
         const Body& particle = particles_[i];
         for (size_t j = i + 1; j < n_particles(); ++j) {
             const Body& other = particles_[j];
             float f = gravity_force(
                 particle, other,
-                G_, ljs_
+                g_, ljs_
             ).norm();
             float r = (other.X() - particle.X()).norm();
             energy -= r * f;
@@ -94,7 +90,7 @@ void System::calculate_forces() {
             Body& other = particles_[j];
             Eigen::Vector3d df = gravity_force(
                 particle, other,
-                G_, ljs_
+                g_, ljs_
             );
             particle.F(particle.F() + df);
             other.F(other.F() - df);
@@ -110,14 +106,6 @@ void System::step(double dt) {
     calculate_forces();
     for (auto& p : particles_) {
         p.accelerate(0.5 * p.a() * dt); // вторая половина
-    }
-}
-
-void System::print_state_xyz(std::ostream& os, const std::string& comment) const {
-    os << n_particles() << "\n"
-       << comment << "\n";
-    for (auto p: particles_) {
-        os << p.show_xyz() << "\n";
     }
 }
 

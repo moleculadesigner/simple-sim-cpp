@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Integrator.hpp"
+#include "System.hpp"
 #include <Eigen/Dense>
 
 using V3 = Eigen::Vector3d;

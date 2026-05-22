@@ -1,13 +1,12 @@
 // VV intergator for N-body gravity problem
 // 
-#ifndef INTEGRATOR
-#define INTEGRATOR
+#ifndef SYSTEM
+#define SYSTEM
 
 
 #include "Body.hpp"
 #include <vector>
 #include <Eigen/Dense>
-#include <ostream>
 
 
 namespace sim {
@@ -17,10 +16,11 @@ static double SigmaScale = 1e-10;
 class System {
 private:
     std::vector<Body> particles_;
-    double G_ = G;
+    double g_ = G;
     double ljs_ = SigmaScale;
 
 public:
+    System() = default;
     System(size_t n_particles); // random init
     System(const std::vector<Body>& particles); // from bodies
     System(
@@ -31,7 +31,15 @@ public:
     void add_particle(const Body& particle);
     Body& particle(size_t n);
     const Body& particle(size_t n) const;
+    std::vector<Body>& particles() {return particles_;}
+    const std::vector<Body>& particles() const {return particles_;}
     size_t n_particles() const {return particles_.size();}
+    
+    double g() const {return g_;}
+    double lj_scale() const {return ljs_;}
+    
+    void g(double g) {g_ = g;}
+    void lj_scale(double ljs) {ljs_ = ljs;}
 
 // Energy
 public:
@@ -43,11 +51,10 @@ public:
 public:
     void calculate_forces();
     void step(double dt);
-    void print_state_xyz(std::ostream& os, const std::string& comment) const;
     Eigen::Vector3d com() const;
     void recenter();
     
 }; // System
 } // namespace sim
 
-#endif // INTEGRATOR
+#endif // SYSTEM

@@ -1,9 +1,6 @@
 #include "Body.hpp"
 #include <cmath>
-#include <array>
 #include <stdexcept>
-#include <algorithm>
-#include <string>
 
 namespace sim {
 
@@ -39,15 +36,6 @@ void Body::accelerate(const Eigen::Vector3d& dv) {
 
 void Body::reset_force() {
     f_ = Eigen::Vector3d::Zero();
-}
-
-std::string Body::show_xyz() const {
-    std::string xyz_entry;
-    xyz_entry = "P " 
-        + std::to_string(coord_[0]) + " "
-        + std::to_string(coord_[1]) + " "
-        + std::to_string(coord_[2]) + " ";
-    return xyz_entry;
 }
 
 Eigen::Vector3d gravity_force(
